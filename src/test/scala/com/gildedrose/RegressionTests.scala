@@ -27,10 +27,20 @@ class RegressionTests extends AnyFunSuite with Matchers with ScalaCheckPropertyC
     1 -> arbitrary[String]
   )
 
+  def genBoundary(boundary: Int): Gen[Int] =
+    Gen.oneOf(boundary - 1, boundary, boundary + 1)
+
+  val sellInGen: Gen[Int] = Gen.frequency(
+    1 -> genBoundary(0),
+    1 -> genBoundary(6),
+    1 -> genBoundary(11),
+    3 -> arbitrary[Int]
+  )
+
   implicit val arbItem: Arbitrary[Item] = Arbitrary {
     for {
       name    <- nameGen
-      sellIn  <- arbitrary[Int]
+      sellIn  <- sellInGen
       quality <- arbitrary[Int]
     } yield new Item(name, sellIn, quality)
   }
