@@ -11,11 +11,7 @@ class GildedRose(val items: Array[Item]) {
 
   def updateQuality() {
     items.foreach { item =>
-      if(!isBrie(item)
-         && !isBackstagePass(item)) {
-          decreaseQuality(item)
-      }
-      else {
+      if(isBrie(item) || isBackstagePass(item)) {
         if(item.quality < 50) {
           item.quality = item.quality + 1
 
@@ -34,25 +30,27 @@ class GildedRose(val items: Array[Item]) {
           }
         }
       }
+      else
+        decreaseQuality(item)
 
       if(!isSulfuras(item)) {
         item.sellIn = item.sellIn - 1
       }
 
       if(item.sellIn < 0) {
-        if(!isBrie(item)) {
-          if(!isBackstagePass(item)) {
-            decreaseQuality(item)
-          }
-          else {
-            item.quality = item.quality - item.quality
-          }
-        }
-        else {
+
+        if(isBrie(item)) {
           if(item.quality < 50) {
             item.quality = item.quality + 1
           }
         }
+        else if(isBackstagePass(item)) {
+          item.quality = item.quality - item.quality
+        }
+        else {
+          decreaseQuality(item)
+        }
+
       }
     }
   }
