@@ -41,13 +41,17 @@ class GildedRose(val items: Array[Item]) {
 
   }
 
+  private def updateSulfuras(item: Item): Unit = ()
+
   def updateQuality() {
     items.foreach { item =>
       if(isBrie(item))
         updateBrie(item)
       else if(isBackstagePass(item))
         updateBackstagePass(item)
-      else if(!isSulfuras(item)) {
+      else if(isSulfuras(item))
+        updateSulfuras(item)
+      else {
         item.sellIn -= 1
         if(item.sellIn < 0)
           decreaseQuality(item, 2)
