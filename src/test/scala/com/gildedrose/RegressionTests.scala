@@ -37,11 +37,17 @@ class RegressionTests extends AnyFunSuite with Matchers with ScalaCheckPropertyC
     3 -> arbitrary[Int]
   )
 
+  val qualityGen: Gen[Int] = Gen.frequency(
+    1 -> genBoundary(0),
+    1 -> genBoundary(50),
+    2 -> arbitrary[Int]
+  )
+
   implicit val arbItem: Arbitrary[Item] = Arbitrary {
     for {
       name    <- nameGen
       sellIn  <- sellInGen
-      quality <- arbitrary[Int]
+      quality <- qualityGen
     } yield new Item(name, sellIn, quality)
   }
 
