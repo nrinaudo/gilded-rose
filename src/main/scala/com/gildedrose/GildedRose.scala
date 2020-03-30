@@ -12,16 +12,20 @@ class GildedRose(val items: Array[Item]) {
   private def increaseQuality(item: Item, quantity: Int): Unit =
     if(item.quality < 50) item.quality = math.min(50, quantity + item.quality)
 
+  private def updateBrie(item: Item): Unit = {
+    item.sellIn -= 1
+
+    if(item.sellIn < 0)
+      increaseQuality(item, 2)
+    else
+      increaseQuality(item, 1)
+
+  }
+
   def updateQuality() {
     items.foreach { item =>
-      if(isBrie(item)) {
-        item.sellIn -= 1
-
-        if(item.sellIn < 0)
-          increaseQuality(item, 2)
-        else
-          increaseQuality(item, 1)
-      }
+      if(isBrie(item))
+        updateBrie(item)
       else if(isBackstagePass(item)) {
         item.sellIn -= 1
 
