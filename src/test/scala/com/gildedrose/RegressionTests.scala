@@ -2,8 +2,16 @@ package com.gildedrose
 
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
+import org.scalactic.Equality
 
 class RegressionTests extends AnyFunSuite with Matchers {
+
+  implicit val itemEquality: Equality[Item] = new Equality[Item] {
+    override def areEqual(a: Item, b: Any) = b match {
+      case b2: Item => a.name == b2.name && a.sellIn == b2.sellIn && a.quality == b2.quality
+      case _        => false
+    }
+  }
 
   def cloneItems(inventory: Array[Item]): Array[Item] =
     inventory.map(item => new Item(item.name, item.sellIn, item.quality))
