@@ -43,6 +43,15 @@ class GildedRose(val items: Array[Item]) {
 
   private def updateSulfuras(item: Item): Unit = ()
 
+  private def updateRegularItem(item: Item): Unit = {
+    item.sellIn -= 1
+    if(item.sellIn < 0)
+      decreaseQuality(item, 2)
+    else
+      decreaseQuality(item, 1)
+
+  }
+
   def updateQuality() {
     items.foreach { item =>
       if(isBrie(item))
@@ -51,13 +60,8 @@ class GildedRose(val items: Array[Item]) {
         updateBackstagePass(item)
       else if(isSulfuras(item))
         updateSulfuras(item)
-      else {
-        item.sellIn -= 1
-        if(item.sellIn < 0)
-          decreaseQuality(item, 2)
-        else
-          decreaseQuality(item, 1)
-      }
+      else
+        updateRegularItem(item)
     }
   }
 
