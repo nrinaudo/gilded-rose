@@ -1,10 +1,12 @@
 package com.gildedrose
 
+import org.scalacheck.{Arbitrary, Gen}
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import org.scalactic.Equality
 
-class RegressionTests extends AnyFunSuite with Matchers {
+class RegressionTests extends AnyFunSuite with Matchers with ScalaCheckPropertyChecks {
 
   implicit val itemEquality: Equality[Item] = new Equality[Item] {
     override def areEqual(a: Item, b: Any) = b match {
@@ -13,21 +15,22 @@ class RegressionTests extends AnyFunSuite with Matchers {
     }
   }
 
+  implicit val arbInventory: Arbitrary[Array[Item]] = Arbitrary(
+    Gen.const(Array(new Item("Backstage passes to a TAFKAL80ETC concert", 9, 22)))
+  )
+
   def cloneItems(inventory: Array[Item]): Array[Item] =
     inventory.map(item => new Item(item.name, item.sellIn, item.quality))
 
   test("Legacy and modern implementations should behave the same") {
-    val inventory = Array(new Item("Backstage passes to a TAFKAL80ETC concert", 10, 20))
+    forAll { inventory: Array[Item] =>
+      val legacy = new LegacyGildedRose(cloneItems(inventory))
+      val modern = new GildedRose(cloneItems(inventory))
 
-    val legacy = new LegacyGildedRose(cloneItems(inventory))
-    val modern = new GildedRose(cloneItems(inventory))
+      legacy.updateQuality()
+      modern.updateQuality()
 
-    legacy.updateQuality()
-    modern.updateQuality()
-
-    val expected = new Item("Backstage passes to a TAFKAL80ETC concert", 9, 22)
-
-    legacy.items.head should equal(expected)
-    modern.items.head should equal(expected)
+      legacy.items should contain theSameElementsInOrderAs modern.items
+    }
   }
 }
