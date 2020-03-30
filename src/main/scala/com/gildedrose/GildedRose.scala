@@ -15,30 +15,37 @@ class GildedRose(val items: Array[Item]) {
   def updateQuality() {
     items.foreach { item =>
       if(isBrie(item)) {
-        if(item.sellIn - 1 < 0)
+        item.sellIn -= 1
+
+        if(item.sellIn < 0)
           increaseQuality(item, 2)
         else
           increaseQuality(item, 1)
       }
       else if(isBackstagePass(item)) {
-        if(item.sellIn - 1 < 0)
-          item.quality = 0
-        else if(item.sellIn < 6)
+        item.sellIn -= 1
+
+        // This is necessary to preserve (bad) legacy handling of sell-in underflowing ints:
+        // - before update of sell-in, it's < 6, so quality is incremented by 3
+        // - after update, it's greater than 0, so its quality is not reset.
+        if(item.sellIn == Int.MaxValue)
           increaseQuality(item, 3)
-        else if(item.sellIn < 11)
+        else if(item.sellIn < 0)
+          item.quality = 0
+        else if(item.sellIn < 5)
+          increaseQuality(item, 3)
+        else if(item.sellIn < 10)
           increaseQuality(item, 2)
         else
           increaseQuality(item, 1)
+
       }
-      else {
-        if(item.sellIn - 1 < 0)
+      else if(!isSulfuras(item)) {
+        item.sellIn -= 1
+        if(item.sellIn < 0)
           decreaseQuality(item, 2)
         else
           decreaseQuality(item, 1)
-      }
-
-      if(!isSulfuras(item)) {
-        item.sellIn = item.sellIn - 1
       }
     }
   }
