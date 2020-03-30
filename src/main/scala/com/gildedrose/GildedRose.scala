@@ -30,19 +30,15 @@ class GildedRose(val items: Array[Item]) {
         else
           increaseQuality(item, 1)
       }
-      else
-        decreaseQuality(item, 1)
+      else {
+        if(item.sellIn - 1 < 0)
+          decreaseQuality(item, 2)
+        else
+          decreaseQuality(item, 1)
+      }
 
       if(!isSulfuras(item)) {
         item.sellIn = item.sellIn - 1
-      }
-
-      if(item.sellIn < 0) {
-
-        if(!isBrie(item) && !isBackstagePass(item)) {
-          decreaseQuality(item, 1)
-        }
-
       }
     }
   }
