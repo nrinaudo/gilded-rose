@@ -1,6 +1,7 @@
 package com.gildedrose
 
 import org.scalacheck.{Arbitrary, Gen}
+import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
@@ -15,9 +16,24 @@ class RegressionTests extends AnyFunSuite with Matchers with ScalaCheckPropertyC
     }
   }
 
-  implicit val arbInventory: Arbitrary[Array[Item]] = Arbitrary(
-    Gen.const(Array(new Item("Backstage passes to a TAFKAL80ETC concert", 9, 22)))
+  val specialNameGen: Gen[String] = Gen.oneOf(
+    "Aged Brie",
+    "Backstage passes to a TAFKAL80ETC concert",
+    "Sulfuras, Hand of Ragnaros"
   )
+
+  val nameGen: Gen[String] = Gen.frequency(
+    3 -> specialNameGen,
+    1 -> arbitrary[String]
+  )
+
+  implicit val arbItem: Arbitrary[Item] = Arbitrary {
+    for {
+      name    <- nameGen
+      sellIn  <- arbitrary[Int]
+      quality <- arbitrary[Int]
+    } yield new Item(name, sellIn, quality)
+  }
 
   def cloneItems(inventory: Array[Item]): Array[Item] =
     inventory.map(item => new Item(item.name, item.sellIn, item.quality))
