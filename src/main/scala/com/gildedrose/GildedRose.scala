@@ -14,15 +14,16 @@ class GildedRose(val items: Array[Item]) {
 
   def updateQuality() {
     items.foreach { item =>
-      if(isBrie(item) || isBackstagePass(item)) {
+      if(isBrie(item))
         increaseQuality(item, 1)
-        if(isBackstagePass(item)) {
-          if(item.sellIn < 11)
-            increaseQuality(item, 1)
+      else if(isBackstagePass(item)) {
 
-          if(item.sellIn < 6)
-            increaseQuality(item, 1)
-        }
+        if(item.sellIn < 6)
+          increaseQuality(item, 3)
+        else if(item.sellIn < 11)
+          increaseQuality(item, 2)
+        else
+          increaseQuality(item, 1)
       }
       else
         decreaseQuality(item)
