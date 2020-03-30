@@ -13,6 +13,9 @@ class RegressionTests extends AnyFunSuite with Matchers {
     legacy.updateQuality()
     modern.updateQuality()
 
-    legacy.items should be(modern.items)
+    val expected = new Item("Backstage passes to a TAFKAL80ETC concert", 9, 22)
+
+    legacy.items.head should equal(expected)
+    modern.items.head should equal(expected)
   }
 }
