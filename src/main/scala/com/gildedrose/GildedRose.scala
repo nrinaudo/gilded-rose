@@ -21,8 +21,9 @@ class GildedRose(val items: Array[Item]) {
           increaseQuality(item, 1)
       }
       else if(isBackstagePass(item)) {
-
-        if(item.sellIn < 6)
+        if(item.sellIn - 1 < 0)
+          item.quality = 0
+        else if(item.sellIn < 6)
           increaseQuality(item, 3)
         else if(item.sellIn < 11)
           increaseQuality(item, 2)
@@ -38,10 +39,7 @@ class GildedRose(val items: Array[Item]) {
 
       if(item.sellIn < 0) {
 
-        if(isBackstagePass(item)) {
-          item.quality = item.quality - item.quality
-        }
-        else if(!isBrie(item)) {
+        if(!isBrie(item) && !isBackstagePass(item)) {
           decreaseQuality(item)
         }
 
