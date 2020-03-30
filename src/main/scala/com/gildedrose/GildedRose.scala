@@ -6,8 +6,8 @@ class GildedRose(val items: Array[Item]) {
   private def isBackstagePass(item: Item): Boolean = item.name.equals("Backstage passes to a TAFKAL80ETC concert")
   private def isSulfuras(item: Item): Boolean      = item.name.equals("Sulfuras, Hand of Ragnaros")
 
-  private def decreaseQuality(item: Item): Unit =
-    if(item.quality > 0 && !isSulfuras(item)) item.quality -= 1
+  private def decreaseQuality(item: Item, quantity: Int): Unit =
+    if(!isSulfuras(item) && item.quality > 0) item.quality = math.max(0, item.quality - quantity)
 
   private def increaseQuality(item: Item, quantity: Int): Unit =
     if(item.quality < 50) item.quality = math.min(50, quantity + item.quality)
@@ -31,7 +31,7 @@ class GildedRose(val items: Array[Item]) {
           increaseQuality(item, 1)
       }
       else
-        decreaseQuality(item)
+        decreaseQuality(item, 1)
 
       if(!isSulfuras(item)) {
         item.sellIn = item.sellIn - 1
@@ -40,7 +40,7 @@ class GildedRose(val items: Array[Item]) {
       if(item.sellIn < 0) {
 
         if(!isBrie(item) && !isBackstagePass(item)) {
-          decreaseQuality(item)
+          decreaseQuality(item, 1)
         }
 
       }
