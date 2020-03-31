@@ -6,17 +6,17 @@ class GildedRose(val items: Array[Item]) {
   private def isBackstagePass(item: Item): Boolean = item.name.equals("Backstage passes to a TAFKAL80ETC concert")
   private def isSulfuras(item: Item): Boolean      = item.name.equals("Sulfuras, Hand of Ragnaros")
 
-  private def increaseQuality(item: Item, quantity: Int): Unit =
-    if(item.quality < 50) item.quality = math.min(50, quantity + item.quality)
+  private def increaseQuality(quality: Int, quantity: Int): Int =
+    if(quality < 50) math.min(50, quantity + quality)
+    else quality
 
   private def updateBrie(item: Item): Unit = {
     item.sellIn -= 1
 
     if(item.sellIn < 0)
-      increaseQuality(item, 2)
+      item.quality = increaseQuality(item.quality, 2)
     else
-      increaseQuality(item, 1)
-
+      item.quality = increaseQuality(item.quality, 1)
   }
 
   private def updateBackstagePass(item: Item): Unit = {
@@ -26,15 +26,15 @@ class GildedRose(val items: Array[Item]) {
     // - before update of sell-in, it's < 6, so quality is incremented by 3
     // - after update, it's greater than 0, so its quality is not reset.
     if(item.sellIn == Int.MaxValue)
-      increaseQuality(item, 3)
+      item.quality = increaseQuality(item.quality, 3)
     else if(item.sellIn < 0)
       item.quality = 0
     else if(item.sellIn < 5)
-      increaseQuality(item, 3)
+      item.quality = increaseQuality(item.quality, 3)
     else if(item.sellIn < 10)
-      increaseQuality(item, 2)
+      item.quality = increaseQuality(item.quality, 2)
     else
-      increaseQuality(item, 1)
+      item.quality = increaseQuality(item.quality, 1)
 
   }
 
