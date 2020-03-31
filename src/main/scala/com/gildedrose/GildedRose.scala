@@ -10,16 +10,18 @@ class GildedRose(val items: Array[Item]) {
     if(quality < 50) math.min(50, quantity + quality)
     else quality
 
-  private def updateBrie(item: Item): Unit = {
+  private def updateBrie(item: Item): Item = {
     item.sellIn -= 1
 
     if(item.sellIn < 0)
       item.quality = increaseQuality(item.quality, 2)
     else
       item.quality = increaseQuality(item.quality, 1)
+
+    item
   }
 
-  private def updateBackstagePass(item: Item): Unit = {
+  private def updateBackstagePass(item: Item): Item = {
     item.sellIn -= 1
 
     // This is necessary to preserve (bad) legacy handling of sell-in underflowing ints:
@@ -36,11 +38,12 @@ class GildedRose(val items: Array[Item]) {
     else
       item.quality = increaseQuality(item.quality, 1)
 
+    item
   }
 
-  private def updateSulfuras(item: Item): Unit = ()
+  private def updateSulfuras(item: Item): Item = item
 
-  private def updateRegularItem(item: Item): Unit = {
+  private def updateRegularItem(item: Item): Item = {
 
     def decreaseQuality(quantity: Int): Unit =
       if(item.quality > 0) item.quality = math.max(0, item.quality - quantity)
@@ -51,9 +54,10 @@ class GildedRose(val items: Array[Item]) {
     else
       decreaseQuality(1)
 
+    item
   }
 
-  private def updateItem(item: Item): Unit =
+  private def updateItem(item: Item): Item =
     if(isBrie(item))
       updateBrie(item)
     else if(isBackstagePass(item))
