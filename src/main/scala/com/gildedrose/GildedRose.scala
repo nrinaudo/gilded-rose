@@ -52,17 +52,17 @@ class GildedRose(val items: Array[Item]) {
 
   }
 
-  def updateQuality() {
-    items.foreach { item =>
-      if(isBrie(item))
-        updateBrie(item)
-      else if(isBackstagePass(item))
-        updateBackstagePass(item)
-      else if(isSulfuras(item))
-        updateSulfuras(item)
-      else
-        updateRegularItem(item)
-    }
-  }
+  private def updateItem(item: Item): Unit =
+    if(isBrie(item))
+      updateBrie(item)
+    else if(isBackstagePass(item))
+      updateBackstagePass(item)
+    else if(isSulfuras(item))
+      updateSulfuras(item)
+    else
+      updateRegularItem(item)
+
+  def updateQuality(): Unit =
+    items.foreach(updateItem)
 
 }
