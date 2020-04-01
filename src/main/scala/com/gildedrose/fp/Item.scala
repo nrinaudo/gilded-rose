@@ -7,8 +7,6 @@ sealed abstract class Item(val name: String, val sellIn: Int, val quality: Int) 
   private def isBackstagePass: Boolean = name.equals(BackstagePassName)
   private def isSulfuras: Boolean      = name.equals(SulfurasName)
 
-  protected def copy(sellIn: Int, quality: Int): Item
-
   def updated: Item
 }
 
@@ -30,7 +28,6 @@ object Item {
 
   final case class AgedBrie(override val sellIn: Int, override val quality: Int)
       extends Item(AgedBrieName, sellIn, quality) {
-    override def copy(sellIn: Int, quality: Int): AgedBrie = AgedBrie(sellIn, quality)
 
     override def updated: Item = {
       val newSellIn = sellIn - 1
@@ -46,7 +43,6 @@ object Item {
 
   final case class BackstagePass(override val sellIn: Int, override val quality: Int)
       extends Item(BackstagePassName, sellIn, quality) {
-    override def copy(sellIn: Int, quality: Int): BackstagePass = BackstagePass(sellIn, quality)
 
     override def updated: Item = {
       val newSellIn = sellIn - 1
@@ -76,13 +72,11 @@ object Item {
 
   final case class Sulfuras(override val sellIn: Int, override val quality: Int)
       extends Item(SulfurasName, sellIn, quality) {
-    override def copy(sellIn: Int, quality: Int): Sulfuras = Sulfuras(sellIn, quality)
-    override def updated: Item                             = this
+    override def updated: Item = this
   }
 
   final case class Regular(override val name: String, override val sellIn: Int, override val quality: Int)
       extends Item(name, sellIn, quality) {
-    override def copy(sellIn: Int, quality: Int): Regular = Regular(name, sellIn, quality)
     override def updated: Item = {
 
       def decreaseQuality(quantity: Int): Int =
