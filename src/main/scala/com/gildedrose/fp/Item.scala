@@ -3,10 +3,6 @@ package com.gildedrose.fp
 import Item._
 
 sealed abstract class Item(val name: String, val sellIn: Int, val quality: Int) extends Product with Serializable {
-  private def isBrie: Boolean          = name.equals(AgedBrieName)
-  private def isBackstagePass: Boolean = name.equals(BackstagePassName)
-  private def isSulfuras: Boolean      = name.equals(SulfurasName)
-
   def updated: Item
 }
 
