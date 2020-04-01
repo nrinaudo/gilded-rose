@@ -1,9 +1,13 @@
 package com.gildedrose.fp
 
-final case class Item(name: String, sellIn: Int, quality: Int) {
-  private def isBrie: Boolean          = name.equals("Aged Brie")
-  private def isBackstagePass: Boolean = name.equals("Backstage passes to a TAFKAL80ETC concert")
-  private def isSulfuras: Boolean      = name.equals("Sulfuras, Hand of Ragnaros")
+import Item._
+
+sealed abstract class Item(val name: String, val sellIn: Int, val quality: Int) extends Product with Serializable {
+  private def isBrie: Boolean          = name.equals(AgedBrieName)
+  private def isBackstagePass: Boolean = name.equals(BackstagePassName)
+  private def isSulfuras: Boolean      = name.equals(SulfurasName)
+
+  protected def copy(sellIn: Int, quality: Int): Item
 
   private def increaseQuality(quality: Int, quantity: Int): Int =
     if(quality < 50) math.min(50, quantity + quality)
@@ -65,5 +69,39 @@ final case class Item(name: String, sellIn: Int, quality: Int) {
     else if(isBackstagePass) updateBackstagePass
     else if(isSulfuras) updateSulfuras
     else updateRegularItem
+
+}
+
+object Item {
+  private val AgedBrieName      = "Aged Brie"
+  private val BackstagePassName = "Backstage passes to a TAFKAL80ETC concert"
+  private val SulfurasName      = "Sulfuras, Hand of Ragnaros"
+
+  def apply(name: String, sellIn: Int, quality: Int): Item = name match {
+    case AgedBrieName      => AgedBrie(sellIn, quality)
+    case BackstagePassName => BackstagePass(sellIn, quality)
+    case SulfurasName      => Sulfuras(sellIn, quality)
+    case _                 => Regular(name, sellIn, quality)
+  }
+
+  final case class AgedBrie(override val sellIn: Int, override val quality: Int)
+      extends Item(AgedBrieName, sellIn, quality) {
+    override def copy(sellIn: Int, quality: Int): AgedBrie = AgedBrie(sellIn, quality)
+  }
+
+  final case class BackstagePass(override val sellIn: Int, override val quality: Int)
+      extends Item(BackstagePassName, sellIn, quality) {
+    override def copy(sellIn: Int, quality: Int): BackstagePass = BackstagePass(sellIn, quality)
+  }
+
+  final case class Sulfuras(override val sellIn: Int, override val quality: Int)
+      extends Item(SulfurasName, sellIn, quality) {
+    override def copy(sellIn: Int, quality: Int): Sulfuras = Sulfuras(sellIn, quality)
+  }
+
+  final case class Regular(override val name: String, override val sellIn: Int, override val quality: Int)
+      extends Item(name, sellIn, quality) {
+    override def copy(sellIn: Int, quality: Int): Regular = Regular(name, sellIn, quality)
+  }
 
 }
