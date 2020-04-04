@@ -1,6 +1,6 @@
 package com.gildedrose
 
-import org.scalacheck.{Arbitrary, Gen}
+import org.scalacheck.{Arbitrary, Gen, Shrink}
 import org.scalacheck.Arbitrary.arbitrary
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
@@ -50,6 +50,20 @@ class RegressionTests extends AnyFunSuite with Matchers with ScalaCheckPropertyC
       quality <- qualityGen
     } yield new Item(name, sellIn, quality)
   }
+
+  implicit val shrinkItem: Shrink[Item] = {
+    def copy(item: Item)(name: String = item.name, sellIn: Int = item.sellIn, quality: Int = item.quality): Item =
+      new Item(name, sellIn, quality)
+
+
+    Shrink { item =>
+      Shrink.shrink(item.name).map(name => copy(item)(name = name)) append
+      Shrink.shrink(item.sellIn).map(sellIn => copy(item)(sellIn = sellIn)) append
+      Shrink.shrink(item.quality).map(quality => copy(item)(quality = quality))
+    }
+
+  }
+
 
   def cloneItems(inventory: Array[Item]): Array[Item] =
     inventory.map(item => new Item(item.name, item.sellIn, item.quality))
