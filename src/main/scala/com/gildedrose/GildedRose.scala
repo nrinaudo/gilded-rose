@@ -2,8 +2,6 @@ package com.gildedrose
 
 class GildedRose(val items: Array[Item]) {
 
-  private def isBrie(item: Item): Boolean     = item.name.equals("Aged Brie")
-  private def isPass(item: Item): Boolean     = item.name.equals("Backstage passes to a TAFKAL80ETC concert")
   private def isSulfuras(item: Item): Boolean = item.name.equals("Sulfuras, Hand of Ragnaros")
 
   private def increaseQuality(item: Item, quantity: Int) =
