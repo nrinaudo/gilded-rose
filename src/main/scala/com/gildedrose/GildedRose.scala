@@ -8,7 +8,7 @@ class GildedRose(val items: Array[Item]) {
     if(item.quality < 50) item.quality = math.min(item.quality + quantity, 50)
 
   private def decreaseQuality(item: Item, quantity: Int) =
-    if(item.quality > 0 && !isSulfuras(item)) item.quality = math.max(0, item.quality - quantity)
+    if(item.quality > 0) item.quality = math.max(0, item.quality - quantity)
 
   private def lastMinute(sellIn: Int) = sellIn < 5 || sellIn == Int.MaxValue
 
