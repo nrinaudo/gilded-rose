@@ -14,26 +14,26 @@ class GildedRose(val items: Array[Item]) {
 
   def updateQuality() {
     items.foreach { item =>
+      if(!isSulfuras(item)) {
+        item.sellIn = item.sellIn - 1
+      }
+
       if(isBrie(item) || isPass(item)) {
 
         increaseQuality(item)
 
         if(isPass(item)) {
-          if(item.sellIn < 11) {
+          if(item.sellIn < 10 || item.sellIn == Int.MaxValue) {
             increaseQuality(item)
           }
 
-          if(item.sellIn < 6) {
+          if(item.sellIn < 5 || item.sellIn == Int.MaxValue) {
             increaseQuality(item)
           }
         }
       }
       else
         decreaseQuality(item)
-
-      if(!isSulfuras(item)) {
-        item.sellIn = item.sellIn - 1
-      }
 
       if(item.sellIn < 0) {
         if(isBrie(item)) {
