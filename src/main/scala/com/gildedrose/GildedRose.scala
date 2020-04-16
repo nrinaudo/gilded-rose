@@ -46,7 +46,7 @@ class GildedRose(val items: Array[Item]) {
           increaseQuality(item)
         }
         else if(isPass(item)) {
-          item.quality = item.quality - item.quality
+          item.quality = 0
         }
         else
           decreaseQuality(item)
