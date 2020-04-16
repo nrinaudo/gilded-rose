@@ -44,8 +44,9 @@ class GildedRose(val items: Array[Item]) {
         }
       }
       else {
-        decreaseQuality(item, 1)
         if(expired)
+          decreaseQuality(item, 2)
+        else
           decreaseQuality(item, 1)
       }
     }
