@@ -22,18 +22,18 @@ class GildedRose(val items: Array[Item]) {
     items.foreach { item =>
       decreaseSellIn(item)
 
-      if(isBrie(item) || isPass(item)) {
-
+      if(isBrie(item)) {
+        increaseQuality(item)
+      }
+      else if(isPass(item)) {
         increaseQuality(item)
 
-        if(isPass(item)) {
-          if(late(item.sellIn)) {
-            increaseQuality(item)
-          }
+        if(late(item.sellIn)) {
+          increaseQuality(item)
+        }
 
-          if(lastMinute(item.sellIn)) {
-            increaseQuality(item)
-          }
+        if(lastMinute(item.sellIn)) {
+          increaseQuality(item)
         }
       }
       else
