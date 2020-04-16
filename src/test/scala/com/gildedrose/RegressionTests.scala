@@ -27,7 +27,14 @@ class RegressionTests extends AnyFunSuite with Matchers with ScalaCheckDrivenPro
       3 -> arbitrary[Int]
     )
 
-    forAll(nameGen -> "name", sellInGen -> "sellIn", arbitrary[Int] -> "quality") { (name, sellIn, quality) =>
+    val qualityGen: Gen[Int] = Gen.frequency(
+      1 -> genBoundary(0),
+      1 -> genBoundary(50),
+      1 -> genBoundary(80),
+      3 -> arbitrary[Int]
+    )
+
+    forAll(nameGen -> "name", sellInGen -> "sellIn", qualityGen -> "quality") { (name, sellIn, quality) =>
       val legacy = new Item(name, sellIn, quality)
       new LegacyGildedRose(Array(legacy)).updateQuality()
 
