@@ -22,6 +22,8 @@ class GildedRose(val items: Array[Item]) {
     items.foreach { item =>
       decreaseSellIn(item)
 
+      val expired = item.sellIn < 0
+
       if(isBrie(item)) {
         increaseQuality(item)
       }
@@ -39,7 +41,7 @@ class GildedRose(val items: Array[Item]) {
       else
         decreaseQuality(item)
 
-      if(item.sellIn < 0) {
+      if(expired) {
         if(isBrie(item)) {
           increaseQuality(item)
         }
