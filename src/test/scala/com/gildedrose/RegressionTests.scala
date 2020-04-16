@@ -1,13 +1,22 @@
 package com.gildedrose
 
-import org.scalacheck.Gen
+import org.scalacheck.{Arbitrary, Gen}
+import Arbitrary.arbitrary
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
 class RegressionTests extends AnyFunSuite with Matchers with ScalaCheckDrivenPropertyChecks {
   test("The legacy implementation and the modernized version should be equivalent") {
-    forAll { (name: String, sellIn: Int, quality: Int) =>
+
+    val nameGen = Gen.oneOf(
+      Gen.const("Aged Brie"),
+      Gen.const("Backstage passes to a TAFKAL80ETC concert"),
+      Gen.const("Sulfuras, Hand of Ragnaros"),
+      arbitrary[String]
+    )
+
+    forAll(nameGen -> "name", arbitrary[Int] -> "sellIn", arbitrary[Int] -> "quality") { (name, sellIn, quality) =>
       val legacy = new Item(name, sellIn, quality)
       new LegacyGildedRose(Array(legacy)).updateQuality()
 
