@@ -9,8 +9,8 @@ class GildedRose(val items: Array[Item]) {
   private def increaseQuality(item: Item, quantity: Int) =
     if(item.quality < 50) item.quality = math.min(item.quality + quantity, 50)
 
-  private def decreaseQuality(item: Item) =
-    if(item.quality > 0 && !isSulfuras(item)) item.quality = item.quality - 1
+  private def decreaseQuality(item: Item, quantity: Int) =
+    if(item.quality > 0 && !isSulfuras(item)) item.quality = math.max(0, item.quality - quantity)
 
   private def lastMinute(sellIn: Int) = sellIn < 5 || sellIn == Int.MaxValue
 
@@ -44,9 +44,9 @@ class GildedRose(val items: Array[Item]) {
         }
       }
       else {
-        decreaseQuality(item)
+        decreaseQuality(item, 1)
         if(expired)
-          decreaseQuality(item)
+          decreaseQuality(item, 1)
       }
     }
   }
