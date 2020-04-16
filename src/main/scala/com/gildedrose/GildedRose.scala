@@ -26,29 +26,28 @@ class GildedRose(val items: Array[Item]) {
 
       if(isBrie(item)) {
         increaseQuality(item)
+        if(expired)
+          increaseQuality(item)
       }
       else if(isPass(item)) {
-        increaseQuality(item)
+        if(expired)
+          item.quality = 0
+        else {
 
-        if(late(item.sellIn)) {
           increaseQuality(item)
-        }
 
-        if(lastMinute(item.sellIn)) {
-          increaseQuality(item)
+          if(late(item.sellIn)) {
+            increaseQuality(item)
+          }
+
+          if(lastMinute(item.sellIn)) {
+            increaseQuality(item)
+          }
         }
       }
-      else
+      else {
         decreaseQuality(item)
-
-      if(expired) {
-        if(isBrie(item)) {
-          increaseQuality(item)
-        }
-        else if(isPass(item)) {
-          item.quality = 0
-        }
-        else
+        if(expired)
           decreaseQuality(item)
       }
     }
