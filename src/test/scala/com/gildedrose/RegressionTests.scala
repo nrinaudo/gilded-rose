@@ -7,19 +7,17 @@ import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
 class RegressionTests extends AnyFunSuite with Matchers with ScalaCheckDrivenPropertyChecks {
   test("The legacy implementation and the modernized version should be equivalent") {
+    forAll { (name: String, sellIn: Int, quality: Int) =>
+      val legacy = new Item(name, sellIn, quality)
+      new LegacyGildedRose(Array(legacy)).updateQuality()
 
-    val name    = "Foobar"
-    val quality = 10
-    val sellIn  = 9
+      val modern = new Item(name, sellIn, quality)
+      new GildedRose(Array(modern)).updateQuality()
 
-    val legacy = new Item(name, sellIn, quality)
-    new LegacyGildedRose(Array(legacy)).updateQuality()
+      legacy.name should be(modern.name)
+      legacy.quality should be(modern.quality)
+      legacy.sellIn should be(modern.sellIn)
 
-    val modern = new Item(name, sellIn, quality)
-    new GildedRose(Array(modern)).updateQuality()
-
-    legacy.name should be(modern.name)
-    legacy.quality should be(modern.quality)
-    legacy.sellIn should be(modern.sellIn)
+    }
   }
 }
