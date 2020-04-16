@@ -2,15 +2,16 @@ package com.gildedrose
 
 class GildedRose(val items: Array[Item]) {
 
-  private def isBrie(item: Item): Boolean = item.name.equals("Aged Brie")
-  private def isPass(item: Item): Boolean = item.name.equals("Backstage passes to a TAFKAL80ETC concert")
+  private def isBrie(item: Item): Boolean     = item.name.equals("Aged Brie")
+  private def isPass(item: Item): Boolean     = item.name.equals("Backstage passes to a TAFKAL80ETC concert")
+  private def isSulfuras(item: Item): Boolean = item.name.equals("Sulfuras, Hand of Ragnaros")
 
   def updateQuality() {
     items.foreach { item =>
       if(!isBrie(item)
          && !isPass(item)) {
         if(item.quality > 0) {
-          if(!item.name.equals("Sulfuras, Hand of Ragnaros")) {
+          if(!isSulfuras(item)) {
             item.quality = item.quality - 1
           }
         }
@@ -35,7 +36,7 @@ class GildedRose(val items: Array[Item]) {
         }
       }
 
-      if(!item.name.equals("Sulfuras, Hand of Ragnaros")) {
+      if(!isSulfuras(item)) {
         item.sellIn = item.sellIn - 1
       }
 
@@ -43,7 +44,7 @@ class GildedRose(val items: Array[Item]) {
         if(!isBrie(item)) {
           if(!isPass(item)) {
             if(item.quality > 0) {
-              if(!item.name.equals("Sulfuras, Hand of Ragnaros")) {
+              if(!isSulfuras(item)) {
                 item.quality = item.quality - 1
               }
             }
