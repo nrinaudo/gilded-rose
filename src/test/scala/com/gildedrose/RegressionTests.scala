@@ -16,7 +16,18 @@ class RegressionTests extends AnyFunSuite with Matchers with ScalaCheckDrivenPro
       arbitrary[String]
     )
 
-    forAll(nameGen -> "name", arbitrary[Int] -> "sellIn", arbitrary[Int] -> "quality") { (name, sellIn, quality) =>
+    // Generates a random int around the specified boundary.
+    def genBoundary(boundary: Int): Gen[Int] =
+      Gen.oneOf(boundary - 1, boundary, boundary + 1)
+
+    val sellInGen: Gen[Int] = Gen.frequency(
+      1 -> genBoundary(0),
+      1 -> genBoundary(6),
+      1 -> genBoundary(11),
+      3 -> arbitrary[Int]
+    )
+
+    forAll(nameGen -> "name", sellInGen -> "sellIn", arbitrary[Int] -> "quality") { (name, sellIn, quality) =>
       val legacy = new Item(name, sellIn, quality)
       new LegacyGildedRose(Array(legacy)).updateQuality()
 
