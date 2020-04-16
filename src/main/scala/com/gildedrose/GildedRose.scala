@@ -25,30 +25,18 @@ class GildedRose(val items: Array[Item]) {
 
       val expired = item.sellIn < 0
 
-      if(isBrie(item)) {
-        if(expired)
-          increaseQuality(item, 2)
-        else
-          increaseQuality(item, 1)
+      item.name match {
+        case "Aged Brie" if expired                                                 => increaseQuality(item, 2)
+        case "Aged Brie"                                                            => increaseQuality(item, 1)
+        case "Backstage passes to a TAFKAL80ETC concert" if expired                 => item.quality = 0
+        case "Backstage passes to a TAFKAL80ETC concert" if lastMinute(item.sellIn) => increaseQuality(item, 3)
+        case "Backstage passes to a TAFKAL80ETC concert" if late(item.sellIn)       => increaseQuality(item, 2)
+        case "Backstage passes to a TAFKAL80ETC concert"                            => increaseQuality(item, 1)
+        case "Sulfuras, Hand of Ragnaros"                                           => ()
+        case _ if expired                                                           => decreaseQuality(item, 2)
+        case _                                                                      => decreaseQuality(item, 1)
       }
-      else if(isPass(item)) {
-        if(expired)
-          item.quality = 0
-        else {
-          if(lastMinute(item.sellIn))
-            increaseQuality(item, 3)
-          else if(late(item.sellIn))
-            increaseQuality(item, 2)
-          else
-            increaseQuality(item, 1)
-        }
-      }
-      else {
-        if(expired)
-          decreaseQuality(item, 2)
-        else
-          decreaseQuality(item, 1)
-      }
+
     }
   }
 }
