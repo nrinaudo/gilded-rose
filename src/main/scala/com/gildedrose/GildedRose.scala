@@ -2,9 +2,11 @@ package com.gildedrose
 
 class GildedRose(val items: Array[Item]) {
 
+  private def isBrie(item: Item): Boolean = item.name.equals("Aged Brie")
+
   def updateQuality() {
     items.foreach { item =>
-      if(!item.name.equals("Aged Brie")
+      if(!isBrie(item)
          && !item.name.equals("Backstage passes to a TAFKAL80ETC concert")) {
         if(item.quality > 0) {
           if(!item.name.equals("Sulfuras, Hand of Ragnaros")) {
@@ -37,7 +39,7 @@ class GildedRose(val items: Array[Item]) {
       }
 
       if(item.sellIn < 0) {
-        if(!item.name.equals("Aged Brie")) {
+        if(!isBrie(item)) {
           if(!item.name.equals("Backstage passes to a TAFKAL80ETC concert")) {
             if(item.quality > 0) {
               if(!item.name.equals("Sulfuras, Hand of Ragnaros")) {
