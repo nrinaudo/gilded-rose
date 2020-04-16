@@ -17,25 +17,28 @@ class GildedRose(val items: Array[Item]) {
   private def decreaseSellIn(item: Item) =
     if(!isSulfuras(item)) item.sellIn = item.sellIn - 1
 
-  def updateQuality() {
-    items.foreach { item =>
-      decreaseSellIn(item)
+  private def updateItem(item: Item) = {
+    decreaseSellIn(item)
 
-      val expired = item.sellIn < 0
+    val expired = item.sellIn < 0
 
-      item.name match {
-        case GildedRose.AgedBrie if expired                      => increaseQuality(item, 2)
-        case GildedRose.AgedBrie                                 => increaseQuality(item, 1)
-        case GildedRose.BackstagePass if expired                 => item.quality = 0
-        case GildedRose.BackstagePass if lastMinute(item.sellIn) => increaseQuality(item, 3)
-        case GildedRose.BackstagePass if late(item.sellIn)       => increaseQuality(item, 2)
-        case GildedRose.BackstagePass                            => increaseQuality(item, 1)
-        case GildedRose.Sulfuras                                 => ()
-        case _ if expired                                        => decreaseQuality(item, 2)
-        case _                                                   => decreaseQuality(item, 1)
-      }
+    item.name match {
+      case GildedRose.AgedBrie if expired                      => increaseQuality(item, 2)
+      case GildedRose.AgedBrie                                 => increaseQuality(item, 1)
+      case GildedRose.BackstagePass if expired                 => item.quality = 0
+      case GildedRose.BackstagePass if lastMinute(item.sellIn) => increaseQuality(item, 3)
+      case GildedRose.BackstagePass if late(item.sellIn)       => increaseQuality(item, 2)
+      case GildedRose.BackstagePass                            => increaseQuality(item, 1)
+      case GildedRose.Sulfuras                                 => ()
+      case _ if expired                                        => decreaseQuality(item, 2)
+      case _                                                   => decreaseQuality(item, 1)
+
     }
+
   }
+
+  def updateQuality(): Unit =
+    items.foreach(updateItem)
 }
 
 object GildedRose {
