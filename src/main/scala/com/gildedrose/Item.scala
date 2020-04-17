@@ -18,4 +18,8 @@ object Item {
       if(item.name == GildedRose.BackstagePass) Some((item.sellIn, item.quality))
       else None
   }
+
+  object Sulfuras {
+    def unapply(item: Item): Boolean = item.name == GildedRose.Sulfuras
+  }
 }
