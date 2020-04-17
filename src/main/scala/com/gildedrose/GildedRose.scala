@@ -25,9 +25,9 @@ class GildedRose(val items: Array[Item]) {
     val expired = item.sellIn < 0
 
     item match {
-      case Item(GildedRose.AgedBrie, _, quality) if expired => item.quality = increaseQuality(quality, 2)
-      case Item(GildedRose.AgedBrie, _, quality)            => item.quality = increaseQuality(quality, 1)
-      case Item(GildedRose.BackstagePass, _, _) if expired  => item.quality = 0
+      case Item.AgedBrie(_, quality) if expired            => item.quality = increaseQuality(quality, 2)
+      case Item.AgedBrie(_, quality)                       => item.quality = increaseQuality(quality, 1)
+      case Item(GildedRose.BackstagePass, _, _) if expired => item.quality = 0
       case Item(GildedRose.BackstagePass, sellIn, quality) if lastMinute(sellIn) =>
         item.quality = increaseQuality(quality, 3)
       case Item(GildedRose.BackstagePass, sellIn, quality) if late(sellIn) => item.quality = increaseQuality(quality, 2)
