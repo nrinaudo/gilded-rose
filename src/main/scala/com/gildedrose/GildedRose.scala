@@ -40,9 +40,3 @@ class GildedRose(val items: Array[Item]) {
   def updateQuality(): Unit =
     items.foreach(updateItem)
 }
-
-object GildedRose {
-  val AgedBrie: String      = "Aged Brie"
-  val BackstagePass: String = "Backstage passes to a TAFKAL80ETC concert"
-  val Sulfuras: String      = "Sulfuras, Hand of Ragnaros"
-}

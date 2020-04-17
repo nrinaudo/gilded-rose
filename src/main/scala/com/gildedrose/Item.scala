@@ -8,18 +8,24 @@ object Item {
   def unapply(item: Item): Some[(String, Int, Int)] = Some((item.name, item.sellIn, item.quality))
 
   object AgedBrie {
+    val name: String = "Aged Brie"
+
     def unapply(item: Item): Option[(Int, Int)] =
-      if(item.name == GildedRose.AgedBrie) Some((item.sellIn, item.quality))
+      if(item.name == name) Some((item.sellIn, item.quality))
       else None
   }
 
   object BackstagePass {
+    val name: String = "Backstage passes to a TAFKAL80ETC concert"
+
     def unapply(item: Item): Option[(Int, Int)] =
-      if(item.name == GildedRose.BackstagePass) Some((item.sellIn, item.quality))
+      if(item.name == name) Some((item.sellIn, item.quality))
       else None
   }
 
   object Sulfuras {
-    def unapply(item: Item): Boolean = item.name == GildedRose.Sulfuras
+    val name: String = "Sulfuras, Hand of Ragnaros"
+
+    def unapply(item: Item): Boolean = item.name == name
   }
 }

@@ -10,9 +10,9 @@ class RegressionTests extends AnyFunSuite with Matchers with ScalaCheckDrivenPro
   test("The legacy implementation and the modernized version should be equivalent") {
 
     val nameGen = Gen.oneOf(
-      Gen.const(GildedRose.AgedBrie),
-      Gen.const(GildedRose.BackstagePass),
-      Gen.const(GildedRose.Sulfuras),
+      Gen.const(Item.AgedBrie.name),
+      Gen.const(Item.BackstagePass.name),
+      Gen.const(Item.Sulfuras.name),
       arbitrary[String]
     )
 
