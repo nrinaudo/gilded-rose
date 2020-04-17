@@ -12,6 +12,8 @@ class GildedRose(val items: Array[Item]) {
   private def decreaseQuality(item: Item) =
     if(item.quality > 0 && !isSulfuras(item)) item.quality = item.quality - 1
 
+  private def lastMinute(sellIn: Int) = sellIn < 5 || sellIn == Int.MaxValue
+
   def updateQuality() {
     items.foreach { item =>
       if(!isSulfuras(item)) {
@@ -27,7 +29,7 @@ class GildedRose(val items: Array[Item]) {
             increaseQuality(item)
           }
 
-          if(item.sellIn < 5 || item.sellIn == Int.MaxValue) {
+          if(lastMinute(item.sellIn)) {
             increaseQuality(item)
           }
         }
