@@ -2,8 +2,6 @@ package com.gildedrose
 
 class GildedRose(val items: Array[Item]) {
 
-  private def isSulfuras(item: Item): Boolean = item.name.equals(GildedRose.Sulfuras)
-
   private def increaseQuality(quality: Int, quantity: Int) =
     if(quality < 50) math.min(quality + quantity, 50)
     else quality
