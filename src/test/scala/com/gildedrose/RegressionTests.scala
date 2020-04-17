@@ -9,12 +9,14 @@ import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 class RegressionTests extends AnyFunSuite with Matchers with ScalaCheckDrivenPropertyChecks {
   test("The legacy implementation and the modernized version should be equivalent") {
 
-    val nameGen = Gen.oneOf(
-      Gen.const(Item.AgedBrie.name),
-      Gen.const(Item.BackstagePass.name),
-      Gen.const(Item.Sulfuras.name),
-      arbitrary[String]
-    )
+    val nameGen = Gen
+      .oneOf(
+        Gen.const(Item.AgedBrie.name),
+        Gen.const(Item.BackstagePass.name),
+        Gen.const(Item.Sulfuras.name),
+        arbitrary[String]
+      )
+      .suchThat(!_.startsWith("Conjured"))
 
     // Generates a random int around the specified boundary.
     def genBoundary(boundary: Int): Gen[Int] =

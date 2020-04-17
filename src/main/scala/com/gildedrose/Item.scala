@@ -28,4 +28,10 @@ object Item {
 
     def unapply(item: Item): Boolean = item.name == name
   }
+
+  object Conjured {
+    def unapply(item: Item): Option[(String, Int, Int)] =
+      if(item.name.startsWith("Conjured")) Some((item.name, item.sellIn, item.quality))
+      else None
+  }
 }

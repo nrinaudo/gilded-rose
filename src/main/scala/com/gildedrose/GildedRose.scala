@@ -32,6 +32,8 @@ class GildedRose(val items: Array[Item]) {
       case Item.BackstagePass(sellIn, quality) if late(sellIn)       => item.quality = increaseQuality(quality, 2)
       case Item.BackstagePass(_, quality)                            => item.quality = increaseQuality(quality, 1)
       case Item.Sulfuras()                                           => ()
+      case Item.Conjured(_, _, quality) if expired                   => item.quality = decreaseQuality(quality, 4)
+      case Item.Conjured(_, _, quality)                              => item.quality = decreaseQuality(quality, 2)
       case Item(_, _, quality) if expired                            => item.quality = decreaseQuality(quality, 2)
       case Item(_, _, quality)                                       => item.quality = decreaseQuality(quality, 1)
     }
