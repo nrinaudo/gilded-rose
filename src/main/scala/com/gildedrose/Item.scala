@@ -12,4 +12,10 @@ object Item {
       if(item.name == GildedRose.AgedBrie) Some((item.sellIn, item.quality))
       else None
   }
+
+  object BackstagePass {
+    def unapply(item: Item): Option[(Int, Int)] =
+      if(item.name == GildedRose.BackstagePass) Some((item.sellIn, item.quality))
+      else None
+  }
 }
