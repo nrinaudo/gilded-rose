@@ -24,16 +24,17 @@ class GildedRose(val items: Array[Item]) {
 
     val expired = item.sellIn < 0
 
-    item.name match {
-      case GildedRose.AgedBrie if expired                      => item.quality = increaseQuality(item.quality, 2)
-      case GildedRose.AgedBrie                                 => item.quality = increaseQuality(item.quality, 1)
-      case GildedRose.BackstagePass if expired                 => item.quality = 0
-      case GildedRose.BackstagePass if lastMinute(item.sellIn) => item.quality = increaseQuality(item.quality, 3)
-      case GildedRose.BackstagePass if late(item.sellIn)       => item.quality = increaseQuality(item.quality, 2)
-      case GildedRose.BackstagePass                            => item.quality = increaseQuality(item.quality, 1)
-      case GildedRose.Sulfuras                                 => ()
-      case _ if expired                                        => item.quality = decreaseQuality(item.quality, 2)
-      case _                                                   => item.quality = decreaseQuality(item.quality, 1)
+    item match {
+      case Item(GildedRose.AgedBrie, _, quality) if expired => item.quality = increaseQuality(quality, 2)
+      case Item(GildedRose.AgedBrie, _, quality)            => item.quality = increaseQuality(quality, 1)
+      case Item(GildedRose.BackstagePass, _, _) if expired  => item.quality = 0
+      case Item(GildedRose.BackstagePass, sellIn, quality) if lastMinute(sellIn) =>
+        item.quality = increaseQuality(quality, 3)
+      case Item(GildedRose.BackstagePass, sellIn, quality) if late(sellIn) => item.quality = increaseQuality(quality, 2)
+      case Item(GildedRose.BackstagePass, _, quality)                      => item.quality = increaseQuality(quality, 1)
+      case Item(GildedRose.Sulfuras, _, quality)                           => ()
+      case Item(_, _, quality) if expired                                  => item.quality = decreaseQuality(quality, 2)
+      case Item(_, _, quality)                                             => item.quality = decreaseQuality(quality, 1)
     }
   }
 
