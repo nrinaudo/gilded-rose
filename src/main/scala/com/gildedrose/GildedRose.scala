@@ -16,8 +16,10 @@ class GildedRose(val items: Array[Item]) {
 
   private def late(sellIn: Int) = sellIn < 10
 
-  private def decreaseSellIn(item: Item) =
-    if(!isSulfuras(item)) item.sellIn = item.sellIn - 1
+  private def decreaseSellIn(item: Item) = item match {
+    case Item.Sulfuras()    => ()
+    case Item(_, sellIn, _) => item.sellIn = sellIn - 1
+  }
 
   private def updateItem(item: Item) = {
     decreaseSellIn(item)
