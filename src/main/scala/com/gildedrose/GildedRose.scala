@@ -14,6 +14,8 @@ class GildedRose(val items: Array[Item]) {
 
   private def lastMinute(sellIn: Int) = sellIn < 5 || sellIn == Int.MaxValue
 
+  private def late(sellIn: Int)       = sellIn < 10 || sellIn == Int.MaxValue
+
   def updateQuality() {
     items.foreach { item =>
       if(!isSulfuras(item)) {
@@ -25,7 +27,7 @@ class GildedRose(val items: Array[Item]) {
         increaseQuality(item)
 
         if(isPass(item)) {
-          if(item.sellIn < 10 || item.sellIn == Int.MaxValue) {
+          if(late(item.sellIn)) {
             increaseQuality(item)
           }
 
