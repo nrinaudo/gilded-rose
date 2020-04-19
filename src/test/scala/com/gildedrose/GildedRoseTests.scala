@@ -11,10 +11,11 @@ class GildedroseTests extends AnyFunSuite with Matchers with ScalaCheckDrivenPro
   val conjuredNameGen: Gen[String] = arbitrary[String].map(name => s"Conjured $name")
   val qualityGen: Gen[Int]         = Gen.chooseNum(0, 50)
   val expiredSellInGen: Gen[Int]   = Gen.oneOf(Gen.negNum[Int], Gen.const(0))
+  val validSellInGen: Gen[Int]     = Gen.posNum[Int]
 
   test("Non-expired conjured items should degrade at the rate of 2 every day") {
-    forAll(conjuredNameGen -> "name", qualityGen -> "quality") { (name, quality) =>
-      val item = new Item(name, 10, quality)
+    forAll(conjuredNameGen -> "name", validSellInGen -> "sellIn", qualityGen -> "quality") { (name, sellIn, quality) =>
+      val item = new Item(name, sellIn, quality)
 
       new GildedRose(Array(item)).updateQuality()
 
