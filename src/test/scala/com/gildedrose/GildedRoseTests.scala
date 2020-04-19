@@ -14,4 +14,12 @@ class GildedroseTests extends AnyFunSuite with Matchers with ScalaCheckDrivenPro
     item.quality should be(0)
   }
 
+  test("Expired conjured items should degrade at the rate of 4 every day") {
+    val item = new Item("Conjured item", 0, 5)
+
+    new GildedRose(Array(item)).updateQuality()
+
+    item.quality should be(1)
+  }
+
 }
