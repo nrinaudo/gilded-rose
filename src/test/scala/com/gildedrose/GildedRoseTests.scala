@@ -48,6 +48,16 @@ class GildedroseTests extends AnyFunSuite with Matchers with ScalaCheckDrivenPro
     }
   }
 
+  test("Expired regular items should degrade at the rate of 2 every day") {
+    forAll(regularNameGen -> "name", expiredSellInGen -> "sellIn", qualityGen -> "quality") { (name, sellIn, quality) =>
+      val item = new Item(name, sellIn, quality)
+
+      new GildedRose(Array(item)).updateQuality()
+
+      item.quality should be(math.max(0, quality - 2))
+    }
+  }
+
   test("Non-expired aged brie should increase in quality at the rate of 1 every day") {
     forAll(validSellInGen -> "sellIn", qualityGen -> "quality") { (sellIn, quality) =>
       val item = new Item(Item.AgedBrie.name, sellIn, quality)
