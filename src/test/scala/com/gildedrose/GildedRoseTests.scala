@@ -90,4 +90,14 @@ class GildedroseTests extends AnyFunSuite with Matchers with ScalaCheckDrivenPro
       updated(Item.Sulfuras.name, sellIn, 80) should be(80)
     }
   }
+
+  test("Expired backstage passes should have a value of 0") {
+    forAll(expiredSellInGen -> "sellIn", qualityGen -> "quality") { (sellIn, quality) =>
+      assertQuality(
+        observed = updated(Item.BackstagePass.name, sellIn, quality),
+        expected = 0
+      )
+    }
+  }
+
 }
