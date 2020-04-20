@@ -22,64 +22,66 @@ class GildedroseTests extends AnyFunSuite with Matchers with ScalaCheckDrivenPro
     else if(expected > 50) observed should be(50)
     else observed should be(expected)
 
+  def updated(name: String, sellIn: Int, quality: Int) = {
+    val item = new Item(name, sellIn, quality)
+
+    new GildedRose(Array(item)).updateQuality()
+
+    item.quality
+  }
+
   test("Non-expired conjured items should degrade at the rate of 2 every day") {
     forAll(conjuredNameGen -> "name", validSellInGen -> "sellIn", qualityGen -> "quality") { (name, sellIn, quality) =>
-      val item = new Item(name, sellIn, quality)
-
-      new GildedRose(Array(item)).updateQuality()
-
-      assertQuality(item.quality, quality - 2)
+      assertQuality(
+        observed = updated(name, sellIn, quality),
+        expected = quality - 2
+      )
     }
   }
 
   test("Expired conjured items should degrade at the rate of 4 every day") {
     forAll(conjuredNameGen -> "name", expiredSellInGen -> "sellIn", qualityGen -> "quality") {
       (name, sellIn, quality) =>
-        val item = new Item(name, sellIn, quality)
-
-        new GildedRose(Array(item)).updateQuality()
-
-        assertQuality(item.quality, quality - 4)
+        assertQuality(
+          observed = updated(name, sellIn, quality),
+          expected = quality - 4
+        )
     }
   }
 
   test("Non-expired regular items should degrade at the rate of 1 every day") {
     forAll(regularNameGen -> "name", validSellInGen -> "sellIn", qualityGen -> "quality") { (name, sellIn, quality) =>
-      val item = new Item(name, sellIn, quality)
-
-      new GildedRose(Array(item)).updateQuality()
-
-      assertQuality(item.quality, quality - 1)
+      assertQuality(
+        observed = updated(name, sellIn, quality),
+        expected = quality - 1
+      )
     }
   }
 
   test("Expired regular items should degrade at the rate of 2 every day") {
     forAll(regularNameGen -> "name", expiredSellInGen -> "sellIn", qualityGen -> "quality") { (name, sellIn, quality) =>
-      val item = new Item(name, sellIn, quality)
-
-      new GildedRose(Array(item)).updateQuality()
-
-      assertQuality(item.quality, quality - 2)
+      assertQuality(
+        observed = updated(name, sellIn, quality),
+        expected = quality - 2
+      )
     }
   }
 
   test("Non-expired aged brie should increase in quality at the rate of 1 every day") {
     forAll(validSellInGen -> "sellIn", qualityGen -> "quality") { (sellIn, quality) =>
-      val item = new Item(Item.AgedBrie.name, sellIn, quality)
-
-      new GildedRose(Array(item)).updateQuality()
-
-      assertQuality(item.quality, quality + 1)
+      assertQuality(
+        observed = updated(Item.AgedBrie.name, sellIn, quality),
+        expected = quality + 1
+      )
     }
   }
 
   test("Expired aged brie should increase in quality at the rate of 2 every day") {
     forAll(expiredSellInGen -> "sellIn", qualityGen -> "quality") { (sellIn, quality) =>
-      val item = new Item(Item.AgedBrie.name, sellIn, quality)
-
-      new GildedRose(Array(item)).updateQuality()
-
-      assertQuality(item.quality, quality + 2)
+      assertQuality(
+        observed = updated(Item.AgedBrie.name, sellIn, quality),
+        expected = quality + 2
+      )
     }
   }
 }
