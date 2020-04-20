@@ -118,4 +118,13 @@ class GildedroseTests extends AnyFunSuite with Matchers with ScalaCheckDrivenPro
     }
   }
 
+    test("Backstage passes whose sellIn is in [11, ) should increase in value at the rate of 1 every day") {
+    forAll(Gen.choose(6, 10) -> "sellIn", qualityGen -> "quality") { (sellIn, quality) =>
+      assertQuality(
+        observed = updated(Item.BackstagePass.name, sellIn, quality),
+        expected = quality + 2
+      )
+    }
+  }
+
 }
