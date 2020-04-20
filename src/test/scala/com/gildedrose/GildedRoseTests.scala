@@ -17,13 +17,18 @@ class GildedroseTests extends AnyFunSuite with Matchers with ScalaCheckDrivenPro
   val expiredSellInGen: Gen[Int] = Gen.oneOf(Gen.negNum[Int], Gen.const(0))
   val validSellInGen: Gen[Int]   = Gen.posNum[Int]
 
+  def assertQuality(observed: Int, expected: Int) =
+    if(expected < 0) observed should be(0)
+    else if(expected > 50) observed should be(50)
+    else observed should be(expected)
+
   test("Non-expired conjured items should degrade at the rate of 2 every day") {
     forAll(conjuredNameGen -> "name", validSellInGen -> "sellIn", qualityGen -> "quality") { (name, sellIn, quality) =>
       val item = new Item(name, sellIn, quality)
 
       new GildedRose(Array(item)).updateQuality()
 
-      item.quality should be(math.max(0, quality - 2))
+      assertQuality(item.quality, quality - 2)
     }
   }
 
@@ -34,7 +39,7 @@ class GildedroseTests extends AnyFunSuite with Matchers with ScalaCheckDrivenPro
 
         new GildedRose(Array(item)).updateQuality()
 
-        item.quality should be(math.max(0, quality - 4))
+        assertQuality(item.quality, quality - 4)
     }
   }
 
@@ -44,7 +49,7 @@ class GildedroseTests extends AnyFunSuite with Matchers with ScalaCheckDrivenPro
 
       new GildedRose(Array(item)).updateQuality()
 
-      item.quality should be(math.max(0, quality - 1))
+      assertQuality(item.quality, quality - 1)
     }
   }
 
@@ -54,7 +59,7 @@ class GildedroseTests extends AnyFunSuite with Matchers with ScalaCheckDrivenPro
 
       new GildedRose(Array(item)).updateQuality()
 
-      item.quality should be(math.max(0, quality - 2))
+      assertQuality(item.quality, quality - 2)
     }
   }
 
@@ -64,7 +69,7 @@ class GildedroseTests extends AnyFunSuite with Matchers with ScalaCheckDrivenPro
 
       new GildedRose(Array(item)).updateQuality()
 
-      item.quality should be(math.min(50, quality + 1))
+      assertQuality(item.quality, quality + 1)
     }
   }
 
@@ -74,7 +79,7 @@ class GildedroseTests extends AnyFunSuite with Matchers with ScalaCheckDrivenPro
 
       new GildedRose(Array(item)).updateQuality()
 
-      item.quality should be(math.min(50, quality + 2))
+      assertQuality(item.quality, quality + 2)
     }
   }
 }
