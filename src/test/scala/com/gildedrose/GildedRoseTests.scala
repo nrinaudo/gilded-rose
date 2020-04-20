@@ -84,4 +84,10 @@ class GildedroseTests extends AnyFunSuite with Matchers with ScalaCheckDrivenPro
       )
     }
   }
+
+  test("Sulfuras' quality should never change") {
+    forAll(arbitrary[Int] -> "sellIn") { sellIn =>
+      updated(Item.Sulfuras.name, sellIn, 80) should be(80)
+    }
+  }
 }
