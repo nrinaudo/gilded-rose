@@ -7,15 +7,7 @@ class GildedRose(val items: Array[Item]) {
   def isSulfuras(item: Item) = item.name.equals("Sulfuras, Hand of Ragnaros")
 
   def updateItemQuality(item: Item): Unit = {
-    if(!isBrie(item)
-       && !isPass(item)) {
-      if(item.quality > 0) {
-        if(!isSulfuras(item)) {
-          item.quality = item.quality - 1
-        }
-      }
-    }
-    else {
+    if(isBrie(item) || isPass(item)) {
       if(item.quality < 50) {
         item.quality = item.quality + 1
 
@@ -33,6 +25,15 @@ class GildedRose(val items: Array[Item]) {
           }
         }
       }
+
+    }
+    else {
+      if(item.quality > 0) {
+        if(!isSulfuras(item)) {
+          item.quality = item.quality - 1
+        }
+      }
+
     }
 
     if(!isSulfuras(item)) {
@@ -40,21 +41,17 @@ class GildedRose(val items: Array[Item]) {
     }
 
     if(item.sellIn < 0) {
-      if(!isBrie(item)) {
-        if(!isPass(item)) {
-          if(item.quality > 0) {
-            if(!isSulfuras(item)) {
-              item.quality = item.quality - 1
-            }
-          }
-        }
-        else {
-          item.quality = item.quality - item.quality
-        }
-      }
-      else {
+      if(isBrie(item)) {
         if(item.quality < 50) {
           item.quality = item.quality + 1
+        }
+      }
+      else if(isPass(item)) {
+        item.quality = 0
+      }
+      else if(item.quality > 0) {
+        if(!isSulfuras(item)) {
+          item.quality = item.quality - 1
         }
       }
     }
