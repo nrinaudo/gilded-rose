@@ -16,9 +16,18 @@ class RegressionTests extends AnyFunSuite with ScalaCheckPropertyChecks with Mat
     3 -> arbitrary[String]
   )
 
+  def genBoundaries(i: Int): Gen[Int] = Gen.choose(i - 1, i + 1)
+
+  val sellInGen: Gen[Int] = Gen.frequency(
+    1 -> genBoundaries(11),
+    1 -> genBoundaries(6),
+    1 -> genBoundaries(0),
+    3 -> arbitrary[Int]
+  )
+
   test("Legacy implementation should behave the same as the refactored one") {
 
-    forAll(nameGen -> "name", arbitrary[Int] -> "sellIn", arbitrary[Int] -> "quality") { (name, sellIn, quality) =>
+    forAll(nameGen -> "name", sellInGen -> "sellIn", arbitrary[Int] -> "quality") { (name, sellIn, quality) =>
       val legacyItem = new Item(name, sellIn, quality)
       new LegacyGildedRose(Array(legacyItem)).updateQuality()
 
