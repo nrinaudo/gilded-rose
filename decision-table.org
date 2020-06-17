@@ -1,0 +1,34 @@
+* General algorithm
+
+- =Item=: type of the item being updated.
+- =sellIn'=: current sell-in (after having being decremented for the update).
+- =quality'=: updated quality.
+
+Post-conditions are enforced by the "clamping" table. This is where we'll ensure the quality of non-Sulfuras items is always in [0, 50], for example.
+
+| Item     | sellIn' | quality'    |
+|----------+---------+-------------|
+| Sulfuras | -       | quality     |
+| Brie     | >= 0    | quality + 1 |
+| Brie     | < 0     | quality + 2 |
+| Pass     | > 10    | quality + 1 |
+| Pass     | [6, 10] | quality + 2 |
+| Pass     | [1, 5]  | quality + 3 |
+| Pass     | < 0     | 0           |
+| Regular  | >= 0    | quality - 1 |
+| Regular  | < 0     | quality - 2 |
+| Conjured | >= 0    | quality - 2 |
+| Conjured | < 0     | quality - 4 |
+
+* Clamp
+
+- =Sulfuras=: is the item Sulfuras?
+- =quality'=: updated quality.
+- =quality''=: quality, adjusted to fit requirements.
+
+| Sulfuras | quality' | quality'' |
+|----------+----------+-----------|
+| T        | -        |        80 |
+| F        | > 50     |        50 |
+| F        | < 0      |         0 |
+| F        | [0, 50]  |   quality |
