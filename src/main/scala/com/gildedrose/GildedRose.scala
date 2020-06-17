@@ -14,15 +14,15 @@ class GildedRose(val items: Array[Item]) {
       item.quality = item.quality - 1
 
   def updateItemQuality(item: Item): Unit = {
-    if(isBrie(item) || isPass(item)) {
+    if(isBrie(item)) {
       increaseQuality(item)
-
-      if(isPass(item)) {
-        if(item.sellIn < 11)
-          increaseQuality(item)
-        if(item.sellIn < 6)
-          increaseQuality(item)
-      }
+    }
+    else if(isPass(item)) {
+      increaseQuality(item)
+      if(item.sellIn < 11)
+        increaseQuality(item)
+      if(item.sellIn < 6)
+        increaseQuality(item)
     }
     else
       decreaseQuality(item)
