@@ -7,11 +7,13 @@ class GildedRose(val items: Array[Item]) {
   def isSulfuras(item: Item) = item.name.equals("Sulfuras, Hand of Ragnaros")
 
   def increaseQuality(item: Item, quantity: Int) =
-    if(item.quality < 50) item.quality = item.quality + quantity
+    if(item.quality < 50) item.quality = math.min(50, item.quality + quantity)
 
   def decreaseQuality(item: Item) =
     if(item.quality > 0 && !isSulfuras(item))
       item.quality = item.quality - 1
+
+  def isExpired(item: Item) = item.sellIn < 0
 
   def updateItemQuality(item: Item): Unit = {
 
@@ -20,29 +22,25 @@ class GildedRose(val items: Array[Item]) {
     }
 
     if(isBrie(item)) {
-      increaseQuality(item, 1)
+      if(isExpired(item)) increaseQuality(item, 2)
+      else increaseQuality(item, 1)
     }
     else if(isPass(item)) {
-      if(item.sellIn < 5) {
+      if(isExpired(item)) {
+        item.quality = 0
+      }
+      else if(item.sellIn < 5 || item.sellIn == Int.MaxValue) {
         increaseQuality(item, 3)
       }
-      else if(item.sellIn < 10) {
+      else if(item.sellIn < 10 || item.sellIn == Int.MaxValue) {
         increaseQuality(item, 2)
       }
       else
         increaseQuality(item, 1)
     }
-    else
+    else {
       decreaseQuality(item)
-
-    if(item.sellIn < 0) {
-      if(isBrie(item)) {
-        increaseQuality(item, 1)
-      }
-      else if(isPass(item)) {
-        item.quality = 0
-      }
-      else
+      if(isExpired(item))
         decreaseQuality(item)
     }
   }
